@@ -11,7 +11,7 @@ presets, with per role defaults, a per admin layout and ACL aware chart definiti
 ## Installation
 
 ```bash
-composer require mageos/module-dashboard-chart
+composer require mage-os/module-dashboard-chart
 bin/magento module:enable MageOS_DashboardChart
 bin/magento setup:upgrade
 bin/magento cache:flush

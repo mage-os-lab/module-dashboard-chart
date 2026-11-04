@@ -47,16 +47,19 @@ final class ModuleDependenciesTest extends TestCase
     public function testItMapsModuleNamesToPackageNames(): void
     {
         self::assertSame('magento/module-backend', self::packageName('Magento_Backend'));
-        self::assertSame('mageos/module-advanced-report', self::packageName('MageOS_AdvancedReport'));
+        self::assertSame('mage-os/module-advanced-report', self::packageName('MageOS_AdvancedReport'));
     }
 
     /**
-     * Magento_Backend => magento/module-backend, MageOS_AdvancedReport => mageos/module-advanced-report.
+     * Magento_Backend => magento/module-backend, MageOS_AdvancedReport => mage-os/module-advanced-report.
      */
     private static function packageName(string $moduleName): string
     {
-        [$vendor, $name] = explode('_', $moduleName, 2);
+        [$vendor, $name] = array_map(
+            static fn (string $part): string => strtolower((string) preg_replace('/(?<=[a-z0-9])([A-Z])/', '-$1', $part)),
+            explode('_', $moduleName, 2)
+        );
 
-        return strtolower($vendor) . '/module-' . strtolower((string) preg_replace('/(?<=[a-z0-9])([A-Z])/', '-$1', $name));
+        return $vendor . '/module-' . $name;
     }
 }

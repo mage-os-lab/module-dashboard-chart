@@ -23,7 +23,7 @@
         "magento/module-config": "*",
         "magento/module-store": "*",
         "magento/module-user": "*",
-        "mageos/module-advanced-report": "*"
+        "mage-os/module-advanced-report": "*"
     },
     "require-dev": {
         "bitexpert/phpstan-magento": "^0.44",
