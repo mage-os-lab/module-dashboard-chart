@@ -109,7 +109,7 @@ final class I18nCoverageTest extends TestCase
         );
         foreach ($iterator as $file) {
             $path = $file->getPathname();
-            if (preg_match('#/(Test|dev|vendor|node_modules|\.git)/#', substr($path, \strlen(self::MODULE_DIR))) === 1) {
+            if (preg_match('#/(Test|\.git)/#', substr($path, \strlen(self::MODULE_DIR))) === 1) {
                 continue;
             }
             if (\in_array($file->getExtension(), ['php', 'phtml', 'js', 'html', 'xml'], true)) {

@@ -26,7 +26,6 @@ class DashboardCharts extends AbstractFieldArray
 
     /**
      * @return void
-     * @SuppressWarnings("PHPMD.CamelCaseMethodName")
      */
     protected function _prepareToRender()
     {
@@ -40,7 +39,6 @@ class DashboardCharts extends AbstractFieldArray
     /**
      * @param DataObject $row
      * @return void
-     * @SuppressWarnings("PHPMD.CamelCaseMethodName")
      */
     protected function _prepareArrayRow(DataObject $row)
     {
@@ -57,7 +55,6 @@ class DashboardCharts extends AbstractFieldArray
      * The core field array template plus the sortable rows script (rows are saved in DOM order).
      *
      * @return string
-     * @SuppressWarnings("PHPMD.CamelCaseMethodName")
      */
     protected function _getElementHtml(AbstractElement $element)
     {
@@ -75,9 +72,9 @@ class DashboardCharts extends AbstractFieldArray
 
     private function getRenderer(string $column): BlockInterface
     {
-        // The column renderers are virtual types of SelectColumn (etc/adminhtml/di.xml), unknown to PHPStan.
-        return $this->renderers[$column] ??= $this->getLayout()->createBlock( // @phpstan-ignore argument.templateType
-            self::COLUMNS[$column], // @phpstan-ignore argument.type
+        // The column renderers are virtual types of SelectColumn (etc/adminhtml/di.xml).
+        return $this->renderers[$column] ??= $this->getLayout()->createBlock(
+            self::COLUMNS[$column],
             '',
             ['data' => ['is_render_to_js_template' => true]]
         );

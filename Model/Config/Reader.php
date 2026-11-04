@@ -11,8 +11,6 @@ use Magento\Framework\Config\ValidationStateInterface;
 
 /**
  * Reads dashboard_charts.xml of every module, merged by section and chart id.
- *
- * @SuppressWarnings("PHPMD.CamelCasePropertyName")
  */
 class Reader extends Filesystem
 {

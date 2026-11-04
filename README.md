@@ -132,19 +132,6 @@ ACL tree: Dashboard > Dashboard Charts > Sales / Catalog / Customer Charts, Pers
 
 ## Development
 
-```bash
-composer install && npm install
-composer test:unit      # PHPUnit
-composer test:phpstan   # PHPStan level 8
-composer test:cs-fixer  # PHP CS Fixer (dry run)
-composer test:rector    # Rector (dry run)
-composer test:phpmd     # PHPMD
-composer test:xml       # dashboard_charts.xml against both schemas
-npm run lint            # ESLint (Magento coding standard)
-```
-
-Notes:
-
 - The admin theme is `MageOS/m137-admin-theme`: after LESS changes delete
   `pub/static/adminhtml/MageOS/m137-admin-theme/*/css/styles*` and ban Varnish (`varnishadm "ban req.url ~ ."`),
   which caches the static CSS.
