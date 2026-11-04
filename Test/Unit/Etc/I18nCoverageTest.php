@@ -18,6 +18,8 @@ final class I18nCoverageTest extends TestCase
 
     private const string MODULE_DIR = __DIR__ . '/../../..';
 
+    const array TRANSLATED_LOCALES = ['it_IT', 'fr_FR', 'de_DE', 'es_ES'];
+
     public function testItHasAnEnUsEntryForEveryTranslatablePhraseInTheModule(): void
     {
         $keys = array_keys($this->loadCsv('en_US'));
@@ -26,21 +28,32 @@ final class I18nCoverageTest extends TestCase
         self::assertSame([], $missing, 'Phrases missing from i18n/en_US.csv');
     }
 
-    public function testItHasAnItItTranslationForEveryEnUsEntry(): void
+    public function testItHasATranslationForEveryEnUsEntryInEveryLocale(): void
     {
         $enUs = $this->loadCsv('en_US');
-        $itIt = $this->loadCsv('it_IT');
 
-        self::assertSame([], array_values(array_diff(array_keys($enUs), array_keys($itIt))));
-        self::assertSame([], array_values(array_diff(array_keys($itIt), array_keys($enUs))));
-        foreach ($itIt as $phrase => $translation) {
-            self::assertNotSame('', $translation, \sprintf('Empty it_IT translation for "%s"', $phrase));
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            $translations = $this->loadCsv($locale);
+
+            self::assertSame(
+                [],
+                array_values(array_diff(array_keys($enUs), array_keys($translations))),
+                \sprintf('Phrases missing from i18n/%s.csv', $locale)
+            );
+            self::assertSame(
+                [],
+                array_values(array_diff(array_keys($translations), array_keys($enUs))),
+                \sprintf('Phrases not in en_US found in i18n/%s.csv', $locale)
+            );
+            foreach ($translations as $phrase => $translation) {
+                self::assertNotSame('', $translation, \sprintf('Empty %s translation for "%s"', $locale, $phrase));
+            }
         }
     }
 
     public function testItHasNoDuplicateKeysInTheI18nCsvFiles(): void
     {
-        foreach (['en_US', 'it_IT'] as $locale) {
+        foreach (['en_US', ...self::TRANSLATED_LOCALES] as $locale) {
             $handle = fopen(self::MODULE_DIR . '/i18n/' . $locale . '.csv', 'rb');
             self::assertIsResource($handle);
             $keys = [];
