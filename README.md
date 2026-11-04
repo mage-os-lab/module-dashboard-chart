@@ -1,6 +1,6 @@
 # MageOS_DashboardChart
 
-Admin dashboard charts built on the [MageOS Advanced Report](https://github.com/mage-os-lab/module-advanced-report)
+Admin dashboard charts built on the MageOS Advanced Report
 presets, with per role defaults, a per admin layout and ACL aware chart definitions.
 
 ## Requirements
