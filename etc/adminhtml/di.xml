@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\RoleColumn" type="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\SelectColumn">
+        <arguments>
+            <argument name="source" xsi:type="object">MageOS\DashboardChart\Model\Config\Source\Roles</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\ChartColumn" type="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\SelectColumn">
+        <arguments>
+            <argument name="source" xsi:type="object">MageOS\DashboardChart\Model\Config\Source\Charts</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\OpenedColumn" type="MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\SelectColumn">
+        <arguments>
+            <argument name="source" xsi:type="object">Magento\Config\Model\Config\Source\Yesno</argument>
+        </arguments>
+    </virtualType>
+</config>

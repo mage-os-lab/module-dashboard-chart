@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <admin>
+            <dashboard>
+                <advanced_report_charts_enabled>1</advanced_report_charts_enabled>
+                <advanced_report_charts_max_opened>3</advanced_report_charts_max_opened>
+                <advanced_report_charts>{"_mageos_default_0":{"role":"*","chart":"sales_overview","opened":"1"},"_mageos_default_1":{"role":"*","chart":"sales_by_payment_method","opened":"1"},"_mageos_default_2":{"role":"*","chart":"product_performance","opened":"1"},"_mageos_default_3":{"role":"*","chart":"low_stock_coverage","opened":"0"},"_mageos_default_4":{"role":"*","chart":"dead_stock","opened":"0"},"_mageos_default_5":{"role":"*","chart":"new_customer_registrations","opened":"0"}}</advanced_report_charts>
+            </dashboard>
+        </admin>
+    </default>
+</config>

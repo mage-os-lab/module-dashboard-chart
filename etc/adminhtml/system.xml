@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="admin">
+            <group id="dashboard">
+                <field id="advanced_report_charts_enabled" translate="label comment" type="select" sortOrder="20" showInDefault="1" canRestore="1">
+                    <label>Show Advanced Report Charts</label>
+                    <comment>Charts built on the Advanced Report presets, above the dashboard. Each admin only sees the charts allowed by their role (chart, section and report dataset ACL).</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="advanced_report_charts_max_opened" translate="label comment" type="text" sortOrder="25" showInDefault="1" canRestore="1">
+                    <label>Max Charts Opened at Load</label>
+                    <comment>Charts opened (and loaded) when the dashboard opens; the other charts start closed and load when opened. Applies to the defaults below, to the Personalize tab and to the layouts already saved by the admins.</comment>
+                    <validate>required-entry validate-digits validate-zero-or-greater</validate>
+                    <depends>
+                        <field id="advanced_report_charts_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="advanced_report_charts" translate="label comment" sortOrder="30" showInDefault="1">
+                    <label>Default Advanced Report Charts</label>
+                    <comment>Charts shown, in this order, to the admins of each role until they personalize their dashboard. Drag the rows (or use the arrows) to sort them. "All Roles" rows apply to everybody; the first row of a chart wins. "Opened" = expanded and loaded on load, at most "Max Charts Opened at Load" per role.</comment>
+                    <frontend_model>MageOS\DashboardChart\Block\Adminhtml\System\Config\Form\Field\DashboardCharts</frontend_model>
+                    <backend_model>MageOS\DashboardChart\Model\Config\Backend\DashboardCharts</backend_model>
+                    <depends>
+                        <field id="advanced_report_charts_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

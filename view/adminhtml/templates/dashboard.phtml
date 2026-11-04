@@ -1,0 +1,13 @@
+<?php
+/**
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var \MageOS\DashboardChart\ViewModel\Dashboard $viewModel
+ */
+$viewModel = $block->getData('view_model');
+if (!$viewModel->isVisible()) {
+    return;
+}
+?>
+<section class="dashboardchart" aria-label="<?= $escaper->escapeHtmlAttr(__('Advanced Report Charts')) ?>"
+         data-mage-init="<?= $escaper->escapeHtmlAttr('{"MageOS_DashboardChart/js/dashboard":' . $viewModel->getJsConfig() . '}') ?>"></section>

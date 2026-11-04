@@ -1,0 +1,417 @@
+// MageOS_DashboardChart: dashboard charts (adminhtml_dashboard_index).
+
+@dashboardchart__border: #e3e3e3;
+@dashboardchart__muted: #757575;
+@dashboardchart__text: #303030;
+@dashboardchart__accent: #1979c3;
+@dashboardchart__positive: #185b00;
+@dashboardchart__negative: #b30000;
+
+.dashboardchart {
+    margin-bottom: 3rem;
+
+    &__header {
+        align-items: flex-end;
+        border-bottom: 1px solid @dashboardchart__border;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: space-between;
+        margin-bottom: 1.6rem;
+    }
+
+    &__tabs {
+        display: flex;
+        gap: .4rem;
+    }
+
+    &__tab {
+        background: none;
+        border: 0;
+        border-bottom: 3px solid transparent;
+        border-radius: 0;
+        box-shadow: none;
+        color: @dashboardchart__muted;
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: -1px;
+        padding: .8rem 1.4rem;
+
+        &:hover,
+        &:focus {
+            background: none;
+            box-shadow: none;
+            color: @dashboardchart__text;
+        }
+
+        &._active {
+            border-bottom-color: #eb5202;
+            color: @dashboardchart__text;
+        }
+    }
+
+    &__period {
+        align-items: center;
+        display: flex;
+        gap: .8rem;
+        margin-bottom: .8rem;
+    }
+
+    &__notice {
+        background: #e5f7fe;
+        border-left: 3px solid @dashboardchart__accent;
+        margin-bottom: 1.6rem;
+        padding: .8rem 1.2rem;
+
+        &._error {
+            background: #fae5e5;
+            border-left-color: #e22626;
+        }
+    }
+
+    &__empty {
+        color: @dashboardchart__muted;
+        padding: 2rem 0;
+    }
+
+    &__grid {
+        display: grid;
+        gap: 1.6rem;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        @media (max-width: 1023px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    &__card {
+        background: #fff;
+        border: 1px solid @dashboardchart__border;
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+
+        &._full {
+            grid-column: 1 / -1;
+        }
+
+        &._closed {
+            align-self: start;
+        }
+    }
+
+    &__card-header {
+        align-items: center;
+        display: flex;
+        gap: 1.2rem;
+        padding: 1.2rem 1.6rem;
+    }
+
+    &__toggle {
+        align-items: baseline;
+        background: none;
+        border: 0;
+        box-shadow: none;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        gap: .2rem .8rem;
+        min-width: 0;
+        padding: 0;
+        text-align: left;
+
+        &:hover,
+        &:focus,
+        &:active {
+            background: none;
+            box-shadow: none;
+        }
+
+        &:before {
+            align-self: center;
+            border-color: transparent transparent transparent @dashboardchart__muted;
+            border-style: solid;
+            border-width: 5px 0 5px 7px;
+            content: '';
+            transition: transform .15s;
+        }
+
+        &[aria-expanded='true']:before {
+            transform: rotate(90deg);
+        }
+    }
+
+    &__title {
+        color: @dashboardchart__text;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+
+    &__section,
+    &__range {
+        color: @dashboardchart__muted;
+        font-size: 1.2rem;
+    }
+
+    &__range {
+        white-space: nowrap;
+    }
+
+    &__link {
+        font-size: 1.2rem;
+        white-space: nowrap;
+    }
+
+    &__remove {
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: @dashboardchart__muted;
+        font-size: 2rem;
+        line-height: 1;
+        padding: 0 .4rem;
+
+        &:hover,
+        &:focus {
+            background: none;
+            color: @dashboardchart__text;
+        }
+    }
+
+    &__card-body {
+        border-top: 1px solid @dashboardchart__border;
+        padding: 1.2rem 1.6rem 1.6rem;
+    }
+
+    &__groups {
+        display: inline-flex;
+        margin-bottom: 1.2rem;
+    }
+
+    &__group {
+        background: #fff;
+        border: 1px solid #adadad;
+        border-radius: 0;
+        box-shadow: none;
+        color: @dashboardchart__text;
+        font-size: 1.2rem;
+        padding: .4rem 1rem;
+
+        & + & {
+            border-left: 0;
+        }
+
+        &:first-child {
+            border-radius: 3px 0 0 3px;
+        }
+
+        &:last-child {
+            border-radius: 0 3px 3px 0;
+        }
+
+        &._active {
+            background: #514943;
+            border-color: #514943;
+            color: #fff;
+        }
+    }
+
+    &__totals {
+        display: flex;
+        flex-wrap: wrap;
+        gap: .8rem 2.4rem;
+        margin: 0 0 1.2rem;
+
+        dt {
+            color: @dashboardchart__muted;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        dd {
+            margin: 0;
+        }
+    }
+
+    &__total-value {
+        color: @dashboardchart__text;
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    &__delta {
+        font-size: 1.2rem;
+        margin-left: .6rem;
+
+        &.positive {
+            color: @dashboardchart__positive;
+        }
+
+        &.negative {
+            color: @dashboardchart__negative;
+        }
+
+        &.neutral {
+            color: @dashboardchart__muted;
+        }
+    }
+
+    &__canvas {
+        height: 280px;
+        position: relative;
+        transition: opacity .2s;
+
+        ._full & {
+            height: 320px;
+        }
+
+        ._loading & {
+            opacity: .5;
+        }
+    }
+
+    &__message {
+        color: @dashboardchart__muted;
+        padding: 2rem 0;
+        text-align: center;
+
+        &._error {
+            color: #e22626;
+        }
+    }
+
+    &__description {
+        color: @dashboardchart__muted;
+        font-size: 1.2rem;
+        margin: 1.2rem 0 0;
+    }
+
+    &__intro {
+        margin-bottom: 1.6rem;
+
+        strong {
+            display: block;
+            margin-top: .4rem;
+        }
+    }
+
+    &__limit {
+        color: @dashboardchart__muted;
+        margin-bottom: 1rem;
+
+        &._full {
+            color: @dashboardchart__text;
+            font-weight: 600;
+        }
+    }
+
+    &__table {
+        width: 100%;
+
+        th,
+        td {
+            vertical-align: middle;
+        }
+
+        .admin__actions-switch {
+            white-space: nowrap;
+        }
+    }
+
+    &__row-description {
+        color: @dashboardchart__muted;
+        font-size: 1.2rem;
+    }
+
+    &__order {
+        white-space: nowrap;
+
+        .action-default {
+            padding: .4rem 1rem;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 1.6rem;
+    }
+}
+
+// The admin theme hides .admin__control-checkbox/-radio inputs (opacity: .01, position: absolute) and draws the box
+// on the following <label>: inside the charts block the native control is shown instead and the label box removed.
+// Doubled class: beats the theme rules (including the [disabled] ones) whatever the stylesheet order.
+.dashboardchart {
+    .admin__control-checkbox.admin__control-checkbox,
+    .admin__control-radio.admin__control-radio {
+        appearance: auto;
+        cursor: pointer;
+        height: 1.6rem;
+        margin: 0;
+        opacity: 1;
+        overflow: visible;
+        position: static;
+        vertical-align: middle;
+        width: 1.6rem;
+
+        &[disabled] {
+            cursor: not-allowed;
+            opacity: .5;
+        }
+
+        + label:before {
+            display: none;
+        }
+    }
+}
+
+// Sortable rows of the "Default Advanced Report Charts" configuration field (js/config/sortable-rows.js).
+.dashboardchart-sort {
+    white-space: nowrap;
+
+    &__handle {
+        color: @dashboardchart__muted;
+        cursor: move;
+        display: inline-block;
+        letter-spacing: -.3em;
+        padding: 0 .4rem 0 0;
+        user-select: none;
+        vertical-align: middle;
+
+        &._locked {
+            cursor: not-allowed;
+            opacity: .4;
+        }
+    }
+
+    // Doubled class: beats the admin theme button rules.
+    .action-default.action-default {
+        background: none;
+        border: 0;
+        box-shadow: none;
+        color: @dashboardchart__text;
+        min-width: 0;
+        padding: .2rem .4rem;
+
+        &:hover:not([disabled]) {
+            color: @dashboardchart__accent;
+        }
+
+        &[disabled] {
+            opacity: .3;
+        }
+    }
+}
+
+.admin__control-table .ui-sortable-helper {
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .2);
+}
+
+.admin__control-table .ui-sortable-placeholder {
+    background: #e5f7fe;
+    visibility: visible !important;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block name="mageos.dashboardchart.dashboard" before="dashboard"
+                   template="MageOS_DashboardChart::dashboard.phtml"
+                   ifconfig="admin/dashboard/advanced_report_charts_enabled">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">MageOS\DashboardChart\ViewModel\Dashboard</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

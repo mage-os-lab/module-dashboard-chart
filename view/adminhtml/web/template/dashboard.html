@@ -1,0 +1,159 @@
+<div class="dashboardchart__app">
+    <div class="dashboardchart__header">
+        <div class="dashboardchart__tabs" role="tablist">
+            <button type="button" role="tab" class="dashboardchart__tab"
+                    data-bind="click: showCharts, css: {_active: tab() === 'charts'}, attr: {'aria-selected': tab() === 'charts'}">
+                <span data-bind="text: $root.$t('Charts')"></span>
+            </button>
+            <!-- ko if: canPersonalize -->
+            <button type="button" role="tab" class="dashboardchart__tab"
+                    data-bind="click: showPersonalize, css: {_active: tab() === 'personalize'}, attr: {'aria-selected': tab() === 'personalize'}">
+                <span data-bind="text: $root.$t('Personalize')"></span>
+            </button>
+            <!-- /ko -->
+        </div>
+        <label class="dashboardchart__period" data-bind="visible: tab() === 'charts'">
+            <span data-bind="text: $root.$t('Period')"></span>
+            <select class="admin__control-select"
+                    data-bind="options: periods, optionsText: 'label', optionsValue: 'value', value: period"></select>
+        </label>
+    </div>
+
+    <div class="dashboardchart__notice" role="status" data-bind="visible: notice, text: notice, css: {_error: noticeError}"></div>
+
+    <!-- Charts tab -->
+    <div role="tabpanel" data-bind="visible: tab() === 'charts'">
+        <!-- ko if: !entries().length -->
+        <p class="dashboardchart__empty">
+            <span data-bind="text: $root.$t('No charts on your dashboard.')"></span>
+            <!-- ko if: canPersonalize -->
+            <button type="button" class="action-link" data-bind="click: showPersonalize, text: $root.$t('Add charts')"></button>
+            <!-- /ko -->
+        </p>
+        <!-- /ko -->
+        <div class="dashboardchart__grid" data-bind="foreach: entries">
+            <article class="dashboardchart__card"
+                     data-bind="css: {_full: chart.size === 'full', _closed: !opened(), _loading: loading}">
+                <header class="dashboardchart__card-header">
+                    <button type="button" class="dashboardchart__toggle"
+                            data-bind="click: $parent.toggle, attr: {'aria-expanded': opened() ? 'true' : 'false'}">
+                        <span class="dashboardchart__title" data-bind="text: chart.label"></span>
+                        <span class="dashboardchart__section" data-bind="text: chart.sectionLabel"></span>
+                    </button>
+                    <span class="dashboardchart__range" data-bind="visible: opened, text: rangeLabel"></span>
+                    <!-- ko if: chart.reportUrl -->
+                    <a class="dashboardchart__link" data-bind="attr: {href: chart.reportUrl}, text: $root.$t('Open report')"></a>
+                    <!-- /ko -->
+                    <!-- ko if: $parent.canPersonalize -->
+                    <button type="button" class="dashboardchart__remove"
+                            data-bind="click: $parent.remove, attr: {title: $root.$t('Remove from dashboard'), 'aria-label': $root.$t('Remove from dashboard')}">&times;</button>
+                    <!-- /ko -->
+                </header>
+                <!-- ko if: opened -->
+                <div class="dashboardchart__card-body">
+                    <!-- ko if: groups().length > 1 -->
+                    <div class="dashboardchart__groups" role="group" data-bind="foreach: groups">
+                        <button type="button" class="dashboardchart__group"
+                                data-bind="text: label, css: {_active: $parent.groupIndex() === $index()},
+                                           attr: {'aria-pressed': $parent.groupIndex() === $index() ? 'true' : 'false'},
+                                           click: function () { $parents[1].selectGroup($parent, $index()); }"></button>
+                    </div>
+                    <!-- /ko -->
+                    <!-- ko if: totals().length -->
+                    <dl class="dashboardchart__totals" data-bind="foreach: totals">
+                        <div class="dashboardchart__total">
+                            <dt data-bind="text: label"></dt>
+                            <dd>
+                                <span class="dashboardchart__total-value" data-bind="text: value"></span>
+                                <!-- ko if: delta -->
+                                <span class="dashboardchart__delta" data-bind="text: delta, css: deltaClass"></span>
+                                <!-- /ko -->
+                            </dd>
+                        </div>
+                    </dl>
+                    <!-- /ko -->
+                    <div class="dashboardchart__canvas" data-bind="visible: hasChart, css: {_round: chart.type === 'pie' || chart.type === 'doughnut'}">
+                        <canvas role="img" data-bind="dashboardChartCanvas: $data, attr: {'aria-label': chart.label}"></canvas>
+                    </div>
+                    <p class="dashboardchart__message" data-bind="visible: loading() && !result(), text: $root.$t('Loading...')"></p>
+                    <p class="dashboardchart__message" data-bind="visible: isEmpty, text: $root.$t('No data for this period.')"></p>
+                    <p class="dashboardchart__message _error" data-bind="visible: error, text: error"></p>
+                    <p class="dashboardchart__description" data-bind="text: chart.description"></p>
+                </div>
+                <!-- /ko -->
+            </article>
+        </div>
+    </div>
+
+    <!-- Personalize tab -->
+    <!-- ko if: canPersonalize -->
+    <div role="tabpanel" class="dashboardchart__personalize" data-bind="visible: tab() === 'personalize'">
+        <p class="dashboardchart__intro">
+            <span data-bind="text: $root.$t('Choose the charts of your dashboard and their order. Only the charts allowed by your role are listed.')"></span>
+            <!-- ko ifnot: personalized -->
+            <strong data-bind="text: $root.$t('You are using the default charts of your role.')"></strong>
+            <!-- /ko -->
+        </p>
+        <p class="dashboardchart__limit" data-bind="css: {_full: openedCount() >= maxOpened}">
+            <span data-bind="text: $root.$t('Opened at dashboard load: %1 of %2 maximum. Close a chart to open another one.')
+                                 .replace('%1', openedCount()).replace('%2', maxOpened)"></span>
+        </p>
+        <table class="admin__table-secondary dashboardchart__table">
+            <thead>
+            <tr>
+                <th data-bind="text: $root.$t('Show')"></th>
+                <th data-bind="text: $root.$t('Chart')"></th>
+                <th data-bind="text: $root.$t('Section')"></th>
+                <th data-bind="text: $root.$t('Opened')"></th>
+                <th data-bind="text: $root.$t('Order')"></th>
+            </tr>
+            </thead>
+            <tbody data-bind="foreach: draft">
+            <tr>
+                <td>
+                    <div class="admin__actions-switch" data-role="switcher">
+                        <input type="checkbox" class="admin__actions-switch-checkbox"
+                               data-bind="checked: shown, attr: {id: 'dashboardchart-show-' + chart.id, 'aria-label': $root.$t('Show') + ': ' + chart.label}"/>
+                        <label class="admin__actions-switch-label" data-bind="attr: {for: 'dashboardchart-show-' + chart.id}">
+                            <span class="admin__actions-switch-text"
+                                  data-bind="attr: {'data-text-on': $root.$t('Yes'), 'data-text-off': $root.$t('No')}"></span>
+                        </label>
+                    </div>
+                </td>
+                <td>
+                    <strong data-bind="text: chart.label"></strong>
+                    <div class="dashboardchart__row-description" data-bind="text: chart.description"></div>
+                </td>
+                <td data-bind="text: chart.sectionLabel"></td>
+                <td>
+                    <div class="admin__actions-switch" data-role="switcher">
+                        <input type="checkbox" class="admin__actions-switch-checkbox"
+                               data-bind="checked: opened, enable: canToggleOpened,
+                                          attr: {id: 'dashboardchart-open-' + chart.id, 'aria-label': $root.$t('Opened') + ': ' + chart.label,
+                                                 title: canToggleOpened() ? '' : $root.$t('Maximum number of charts opened at dashboard load reached')}"/>
+                        <label class="admin__actions-switch-label" data-bind="attr: {for: 'dashboardchart-open-' + chart.id}">
+                            <span class="admin__actions-switch-text"
+                                  data-bind="attr: {'data-text-on': $root.$t('Yes'), 'data-text-off': $root.$t('No')}"></span>
+                        </label>
+                    </div>
+                </td>
+                <td class="dashboardchart__order">
+                    <button type="button" class="action-default"
+                            data-bind="click: function () { $parent.move($data, -1); }, enable: $index() > 0,
+                                       attr: {title: $root.$t('Move up'), 'aria-label': $root.$t('Move up')}">&uarr;</button>
+                    <button type="button" class="action-default"
+                            data-bind="click: function () { $parent.move($data, 1); }, enable: $index() < $parent.draft().length - 1,
+                                       attr: {title: $root.$t('Move down'), 'aria-label': $root.$t('Move down')}">&darr;</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="dashboardchart__actions">
+            <button type="button" class="action-default"
+                    data-bind="click: reset, enable: !saving() && personalized(), text: $root.$t('Reset to Default')"></button>
+            <button type="button" class="action-default" data-bind="click: showCharts, text: $root.$t('Cancel')"></button>
+            <button type="button" class="action-primary" data-bind="click: save, enable: !saving(), text: $root.$t('Save Charts')"></button>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
