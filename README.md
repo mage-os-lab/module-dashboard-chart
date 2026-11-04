@@ -1,12 +1,13 @@
 # MageOS_DashboardChart
 
-Admin dashboard charts built on the [MageOS Advanced Report](https://github.com/lucafuser/mage-os-advanced-report)
+Admin dashboard charts built on the [MageOS Advanced Report](https://github.com/mage-os-lab/module-advanced-report)
 presets, with per role defaults, a per admin layout and ACL aware chart definitions.
 
 ## Requirements
 
-- Magento Open Source 2.4.7+ or Mage-OS, PHP 8.3+.
-- `MageOS_AdvancedReport` (the charts are its presets, the data endpoint runs its reports).
+- Magento Open Source 2.4.7+ or Mage-OS, PHP 8.3, 8.4 or 8.5.
+- `mage-os/module-advanced-report` (`MageOS_AdvancedReport`): the charts are its presets, the data endpoint runs its
+  reports. It must provide the preset charts (`Preset::resolveChart()` and `js/report/lib/chart-config`).
 
 ## Installation
 
@@ -21,19 +22,25 @@ No database table is created: the admin layouts are stored in `admin_user.extra`
 
 ## Dashboard
 
-A block above the native dashboard (`adminhtml_dashboard_index.xml`, before `dashboard`) with two tabs:
+A block above the native dashboard (`adminhtml_dashboard_index.xml`, before `dashboard`), shown when the setting below
+and Advanced Report are enabled and the admin may see at least one chart, with two tabs:
 
 - **Charts**: the admin's charts, collapsible (a closed chart sends no request until it is opened), with a period selector (chart default,
-  today, last 7/30 days, month to date, last month, year to date), the dashboard store switcher scope, totals with the
-  comparison delta, a link to the full Advanced Report and a remove button. Charts with metrics in different formats
+  today, last 7/30 days, month to date, last month, year to date; charts without dates, like stock, ignore it), the
+  dashboard store switcher scope and totals with the comparison delta. A link to the full Advanced Report needs the
+  ACL `MageOS_AdvancedReport::reports`. Charts with metrics in different formats
   (money / integer...) get a switcher: never two value axes. Line charts draw both the previous period and the
   previous year as dashed lines, with one report per comparison; the totals delta refers to the previous period.
-  The chart type is not selectable here: the dashboard always uses the default of the preset.
-- **Personalize** (ACL `MageOS_DashboardChart::personalize`): show/hide, opened, order; Save or Reset to Default.
+  The chart type is not selectable here: it comes from the chart definition, which is the default of the preset unless
+  `dashboard_charts.xml` overrides it.
+- **Personalize** (ACL `MageOS_DashboardChart::personalize`): show/hide, opened, order; Save or Reset to Default. With
+  this ACL the Charts tab also has a remove button, and opening, closing or removing a chart there is saved
+  automatically.
 
 Layout resolution (`Model\Dashboard\LayoutResolver`): the layout saved by the admin in `admin_user.extra`
-(key `mageos_dashboard_charts`, other keys like `configState` are preserved), else the configuration rows of
-the admin's role and of "All Roles" (first row of a chart wins). Charts the admin may not see are always dropped.
+(key `mageos_dashboard_charts`, other keys like `configState` are preserved), read only with the Personalize ACL, else
+the configuration rows of the admin's role and of "All Roles" (first row of a chart wins). Charts the admin may not see
+are always dropped.
 
 ## Configuration
 
@@ -103,16 +110,19 @@ presets it declares in its `report_datasets.xml`:
 </config>
 ```
 
-Labels and descriptions are translated with the module dictionaries (`i18n/*.csv`).
+Labels and descriptions are translated with the module dictionaries (`i18n/*.csv`: `en_US`, `it_IT`, `fr_FR`, `de_DE`,
+`es_ES`).
+
+Section attributes: `id`, `label`, `sortOrder`, `disabled`; child `acl`.
 
 Chart attributes: `preset` (default: id), `section` (default: preset area), `label`, `type`
 (`line|bar|horizontalBar|doughnut|pie`), `size` (`half|full`), `limit`, `dateRange`, `compareTo`, `sortBy`,
-`sortDirection`, `sortOrder`, `disabled`; children `description`, `acl`, `metric` and `dimension` (`remove="true"`
-drops one inherited from another file).
+`sortDirection`, `sortOrder`, `disabled`; children `description`, `acl`, `metric` and `dimension` (`dimension` also takes
+`granularity`; `remove="true"` drops one inherited from another file).
 
 `type`, `metric`, `dimension`, `compareTo` and `sortBy` still override the preset, for example on a second chart of the
 same preset, but an override makes the dashboard differ from the Advanced Report page: declare the default in the
-preset instead.
+preset instead. `compareTo` has no effect on line charts, which always load both comparisons.
 
 ### ACL
 
@@ -123,25 +133,26 @@ preset instead.
 | Always | the ACL of the preset dataset in `report_datasets.xml`: module resource (`MageOS_AdvancedReport::sales`...) and core resource (`Magento_Sales::sales_order`, `Magento_Catalog::products`...) |
 
 So an admin who must not see sales never gets order based charts (`sales_orders`, `sales_items` datasets: Sales
-overview, Product performance, Sales by category...), while a catalog manager with Advanced Report > Catalog and
-Catalog > Products sees Stock value, Low stock with coverage, Dead stock and Never sold. The data endpoint
+overview, Product performance, Sales by category...), while a catalog manager with Dashboard Charts > Catalog Charts,
+Advanced Report > Catalog and Catalog > Products gets Stock value and Low stock with coverage. Dead stock and Never sold
+also depend on the `sales_items` dataset, so they need its sales ACL too. The data endpoint
 (`dashboardchart/chart/data`) builds the report request server side from the chart definition (the client only
 sends the chart id, period and store scope), checks the chart access, and Advanced Report checks the dataset ACL again.
 
-ACL tree: Dashboard > Dashboard Charts > Sales / Catalog / Customer Charts, Personalize Dashboard Charts.
+ACL tree: Dashboard > Dashboard Charts > Sales / Catalog / Customer Charts, Personalize Dashboard Charts. The presets of
+the `carts` area get a "Carts" section that `dashboard_charts.xml` does not declare, so they only need
+`MageOS_DashboardChart::charts` and the ACL of their dataset.
 
 ## Development
 
-- The admin theme is `MageOS/m137-admin-theme`: after LESS changes delete
-  `pub/static/adminhtml/MageOS/m137-admin-theme/*/css/styles*` and ban Varnish (`varnishadm "ban req.url ~ ."`),
-  which caches the static CSS.
+- The unit tests in `Test/Unit` run with the unit test suite of the Magento install
+  (`dev/tests/unit/phpunit.xml.dist`).
 - Prototype.js is loaded in the admin and adds enumerable methods to `Array.prototype`: never `$.extend()` AJAX params
   from an array (an empty PHP array serializes to `[]`).
-- In the m137 admin theme `.admin__control-checkbox` / `.admin__control-radio` inputs are `opacity: .01` and only the
+- In the m137 admin theme (`MageOS/m137-admin-theme`) `.admin__control-checkbox` / `.admin__control-radio` inputs are `opacity: .01` and only the
   following `<label>` draws the box. `_module.less` overrides this inside `.dashboardchart` only (native control visible,
   label box hidden); the Personalize tab uses the admin Yes/No switch (`admin__actions-switch`).
 
 ## License
 
-This module is licensed under the [Open Software License 3.0](https://opensource.org/licenses/OSL-3.0) and the
-[Academic Free License 3.0](https://opensource.org/licenses/AFL-3.0).
+This module is licensed under the [MIT License](LICENSE).

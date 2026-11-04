@@ -88,7 +88,7 @@ final class DashboardChartsXmlTest extends TestCase
      */
     private static function presets(): array
     {
-        $path = InstalledVersions::getInstallPath('mageos/module-advanced-report');
+        $path = InstalledVersions::getInstallPath('mage-os/module-advanced-report');
         self::assertNotNull($path);
         $file = $path . '/etc/report_datasets.xml';
 
