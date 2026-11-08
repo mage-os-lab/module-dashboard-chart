@@ -5,6 +5,14 @@ All notable changes to this module are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- "Returns" dashboard section (sortOrder 50) with descriptions, sizes and limits for the 13 return presets of
+  `MageOS_AdvancedReport`; the charts exist only while `MageOS_RMA` is enabled.
+- `en_US`, `it_IT`, `de_DE`, `fr_FR` and `es_ES` translations of the returns section and chart descriptions.
+
 ## 1.0.0 - 2026-11-04
 
 ### Added

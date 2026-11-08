@@ -124,6 +124,45 @@ Chart attributes: `preset` (default: id), `section` (default: preset area), `lab
 same preset, but an override makes the dashboard differ from the Advanced Report page: declare the default in the
 preset instead. `compareTo` has no effect on line charts, which always load both comparisons.
 
+### Sections
+
+| Section | sortOrder | Section ACL | Charts |
+|---|---|---|---|
+| `sales` | 10 | `MageOS_DashboardChart::sales` | Sales overview, by payment method, shipping method, shipping country, customer group, hour, weekday, new vs returning, coupon performance |
+| `catalog` | 20 | `MageOS_DashboardChart::catalog` | Product performance, sales by category and attribute, stock value, low stock, dead stock, never sold |
+| `customers` | 30 | `MageOS_DashboardChart::customers` | Customer value, new customer registrations |
+| `returns` | 50 | none (root resource only) | Return presets of Advanced Report, only while `MageOS_RMA` is enabled |
+| `carts` | not declared (1000) | none (root resource only) | Cart presets of Advanced Report |
+
+### Returns charts
+
+The `returns` presets of Advanced Report are declared in its `etc/report_datasets_rma.xml`, read only while the module
+`MageOS_RMA` is enabled. No PHP is involved on the dashboard side: `dashboard_charts.xml` declares the `returns` section
+and refines the generated charts. With `MageOS_RMA` disabled the presets do not exist, so the charts are skipped, the
+section is empty and is not shown, and default configuration rows or saved layouts pointing to them are dropped.
+
+| Chart (= preset) | Type | Size / limit | Shows |
+|---|---|---|---|
+| `returns_overview` | line | full | Return requests per day, compared with the previous period and the previous year |
+| `withdrawals_vs_returns` | doughnut | | Return requests by type: withdrawal before shipment, return after shipment, mixed |
+| `withdrawals_trend` | bar | 366 | Withdrawals before shipment and returns after shipment per day |
+| `returns_by_reason` | horizontalBar | 10 | Top 10 reasons by return requests |
+| `returns_by_status` | horizontalBar | 10 | Return requests by status |
+| `returns_by_resolution` | doughnut | | Return requests by resolution |
+| `top_returned_products` | horizontalBar | 10 | Top 10 products (parent SKU) by units in the return requests of the period |
+| `returns_by_condition` | doughnut | | Units requested for return by item condition |
+| `product_return_rate` | horizontalBar | 10 | Top 10 products by units requested for return on the orders of the period, with the unit return rate (format switcher) |
+| `unit_return_rate_trend` | line | full | Units ordered, units requested for return and unit return rate per month, both comparisons |
+| `order_return_rate` | line | full | Orders, orders with a return request and order return rate per month, both comparisons |
+| `returns_by_shipping_country` | horizontalBar | 10 | Top 10 shipping countries by orders with return requests, with the order return rate (format switcher) |
+| `open_return_requests` | bar | 366 | Open return requests per day of request |
+
+The return request charts (`returns_overview` to `top_returned_products`, `returns_by_condition`, `open_return_requests`)
+are dated by the request date. `product_return_rate`, `unit_return_rate_trend`, `order_return_rate` and
+`returns_by_shipping_country` are dated by the order date: orders and ordered units of the period, with their return
+requests counted whenever they were made, so past months change as new requests arrive. The request type is decided on
+the shipments created before the request; delivery is not tracked. See the Advanced Report README, "Returns (MageOS_RMA)".
+
 ### ACL
 
 | Level | Required resources |
@@ -141,7 +180,9 @@ sends the chart id, period and store scope), checks the chart access, and Advanc
 
 ACL tree: Dashboard > Dashboard Charts > Sales / Catalog / Customer Charts, Personalize Dashboard Charts. The presets of
 the `carts` area get a "Carts" section that `dashboard_charts.xml` does not declare, so they only need
-`MageOS_DashboardChart::charts` and the ACL of their dataset.
+`MageOS_DashboardChart::charts` and the ACL of their dataset. The `returns` section is declared without `<acl>`: its
+charts need `MageOS_DashboardChart::charts` and the ACL of their dataset, `MageOS_AdvancedReport::returns`,
+`MageOS_RMA::rma_manage` and `Magento_Sales::sales_order`.
 
 ## Development
 
