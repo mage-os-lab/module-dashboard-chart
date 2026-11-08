@@ -6,11 +6,13 @@ namespace MageOS\DashboardChart\Test\Unit\Etc;
 
 use DOMDocument;
 use DOMElement;
+use DOMNode;
 use DOMXPath;
 use MageOS\DashboardChart\Test\Unit\Helper\XPathTestTrait;
 use PHPUnit\Framework\TestCase;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use PHPUnit\Framework\ExpectationFailedException;
 
 final class I18nCoverageTest extends TestCase
 {
@@ -19,6 +21,11 @@ final class I18nCoverageTest extends TestCase
     private const string MODULE_DIR = __DIR__ . '/../../..';
 
     const array TRANSLATED_LOCALES = ['it_IT', 'fr_FR', 'de_DE', 'es_ES'];
+
+    const string RETURNS_PHRASES_XPATH = '/config/section[@id="returns"]/@label'
+        . ' | /config/chart[preceding-sibling::section[1][@id="returns"]]/description';
+
+    const int RETURNS_PHRASES_COUNT = 14;
 
     public function testItHasAnEnUsEntryForEveryTranslatablePhraseInTheModule(): void
     {
@@ -69,6 +76,37 @@ final class I18nCoverageTest extends TestCase
                 array_keys(array_filter(array_count_values($keys), static fn (int $n): bool => $n > 1)),
                 \sprintf('Duplicate keys in i18n/%s.csv', $locale)
             );
+        }
+    }
+
+    /**
+     * @return void
+     * @throws ExpectationFailedException
+     */
+    public function testItTranslatesTheReturnsSectionAndChartDescriptionsInEveryLocale(): void
+    {
+        $document = new DOMDocument();
+        self::assertTrue($document->load(self::MODULE_DIR . '/etc/dashboard_charts.xml'));
+        $phrases = array_map(
+            static fn (DOMNode $node): string => trim($node->textContent),
+            iterator_to_array(self::queryNodes(new DOMXPath($document), self::RETURNS_PHRASES_XPATH), false)
+        );
+        self::assertCount(self::RETURNS_PHRASES_COUNT, $phrases);
+
+        foreach (self::TRANSLATED_LOCALES as $locale) {
+            $translations = $this->loadCsv($locale);
+            foreach ($phrases as $phrase) {
+                self::assertArrayHasKey(
+                    $phrase,
+                    $translations,
+                    \sprintf('Missing %s translation for "%s"', $locale, $phrase)
+                );
+                self::assertNotSame(
+                    $phrase,
+                    $translations[$phrase],
+                    \sprintf('Untranslated %s phrase "%s"', $locale, $phrase)
+                );
+            }
         }
     }
 

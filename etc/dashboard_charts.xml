@@ -95,4 +95,48 @@
     <chart id="abandoned_carts_list" limit="366">
         <description>Abandoned cart value and number per day.</description>
     </chart>
+
+    <!-- The returns presets exist only while MageOS_RMA is enabled (report_datasets_rma.xml of MageOS_AdvancedReport):
+         otherwise these charts are skipped. No section acl: like the carts charts, access is the root resource plus
+         the dataset ACLs (MageOS_AdvancedReport::returns, MageOS_RMA::rma_manage, Magento_Sales::sales_order). -->
+    <section id="returns" label="Returns" sortOrder="50"/>
+    <chart id="returns_overview" size="full" sortOrder="10">
+        <description>Return requests per day, compared with the previous period and the previous year.</description>
+    </chart>
+    <chart id="withdrawals_vs_returns" sortOrder="20">
+        <description>Share of return requests by type: withdrawal before shipment, return after shipment or mixed.</description>
+    </chart>
+    <chart id="withdrawals_trend" limit="366" sortOrder="30">
+        <description>Withdrawals before shipment and returns after shipment per day.</description>
+    </chart>
+    <chart id="returns_by_reason" limit="10" sortOrder="40">
+        <description>Top 10 return reasons by return requests.</description>
+    </chart>
+    <chart id="returns_by_status" sortOrder="50">
+        <description>Return requests by status.</description>
+    </chart>
+    <chart id="returns_by_resolution" sortOrder="60">
+        <description>Share of return requests by resolution.</description>
+    </chart>
+    <chart id="top_returned_products" limit="10" sortOrder="70">
+        <description>Top 10 products by units in the return requests of the period.</description>
+    </chart>
+    <chart id="returns_by_condition" sortOrder="80">
+        <description>Share of the units requested for return by item condition.</description>
+    </chart>
+    <chart id="product_return_rate" limit="10" sortOrder="90">
+        <description>Top 10 products by units requested for return on the orders of the period, with the unit return rate.</description>
+    </chart>
+    <chart id="unit_return_rate_trend" size="full" sortOrder="100">
+        <description>Units ordered and units requested for return per month, with the unit return rate, compared with the previous period and the previous year.</description>
+    </chart>
+    <chart id="order_return_rate" size="full" sortOrder="110">
+        <description>Orders per month, those with a return request and the order return rate, compared with the previous period and the previous year.</description>
+    </chart>
+    <chart id="returns_by_shipping_country" limit="10" sortOrder="120">
+        <description>Top 10 shipping countries by orders with return requests, with the order return rate.</description>
+    </chart>
+    <chart id="open_return_requests" limit="366" sortOrder="130">
+        <description>Open return requests per day of request.</description>
+    </chart>
 </config>
