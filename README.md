@@ -128,7 +128,7 @@ preset instead. `compareTo` has no effect on line charts, which always load both
 
 | Section | sortOrder | Section ACL | Charts |
 |---|---|---|---|
-| `sales` | 10 | `MageOS_DashboardChart::sales` | Sales overview, by payment method, shipping method, shipping country, customer group, hour, weekday, new vs returning, coupon performance |
+| `sales` | 10 | `MageOS_DashboardChart::sales` | Sales overview, by payment method, shipping method, shipping country, taxes by country, customer group, hour, weekday, new vs returning, coupon performance |
 | `catalog` | 20 | `MageOS_DashboardChart::catalog` | Product performance, sales by category and attribute, stock value, low stock, dead stock, never sold |
 | `customers` | 30 | `MageOS_DashboardChart::customers` | Customer value, new customer registrations |
 | `returns` | 50 | none (root resource only) | Return presets of Advanced Report, only while `MageOS_RMA` is enabled |

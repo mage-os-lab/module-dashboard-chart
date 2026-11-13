@@ -30,6 +30,9 @@
     <chart id="sales_by_shipping_country" limit="10" sortOrder="40">
         <description>Top 10 shipping countries by net sales.</description>
     </chart>
+    <chart id="taxes_by_country" limit="10" sortOrder="45">
+        <description>Top 10 shipping countries by taxes charged.</description>
+    </chart>
     <chart id="sales_by_customer_group" sortOrder="50">
         <description>Share of net sales by customer group.</description>
     </chart>
