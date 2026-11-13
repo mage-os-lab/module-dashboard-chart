@@ -82,6 +82,7 @@
 "Top 10 products by units requested for return on the orders of the period, with the unit return rate.","Die 10 Produkte mit den meisten zur Rücksendung angefragten Einheiten aus den Bestellungen des Zeitraums, mit der Retourenquote der Einheiten."
 "Top 10 return reasons by return requests.","Die 10 Rücksendegründe mit den meisten Rücksendeanfragen."
 "Top 10 shipping countries by net sales.","Die 10 Versandländer mit dem höchsten Nettoumsatz."
+"Top 10 shipping countries by taxes charged.","Die 10 Versandländer mit den höchsten berechneten Steuern."
 "Top 10 shipping countries by orders with return requests, with the order return rate.","Die 10 Versandländer mit den meisten Bestellungen mit Rücksendeanfragen, mit der Retourenquote der Bestellungen."
 "Top 10 SKUs by stock value at cost and at retail price.","Die 10 SKUs mit dem höchsten Lagerwert zu Einstands- und Verkaufspreis."
 "Top 10 unsold in-stock products by value tied up.","Die 10 unverkauften lagernden Produkte mit dem höchsten gebundenen Wert."

@@ -12,6 +12,8 @@ and this module adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - "Returns" dashboard section (sortOrder 50) with descriptions, sizes and limits for the 13 return presets of
   `MageOS_AdvancedReport`; the charts exist only while `MageOS_RMA` is enabled.
 - `en_US`, `it_IT`, `de_DE`, `fr_FR` and `es_ES` translations of the returns section and chart descriptions.
+- "Taxes by country" chart in the Sales section (sortOrder 45, top 10), for the `taxes_by_country` preset of
+  `MageOS_AdvancedReport`; skipped while the installed Advanced Report does not declare the preset.
 
 ## 1.0.0 - 2026-11-04
 
